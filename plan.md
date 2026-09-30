@@ -1,6 +1,6 @@
 # Implementation Plan — DentDesk Dental Receptionist Console
 
-**Status:** The per-clinic application, Python Pipecat agent, Supabase migrations, local configuration templates, and setup documentation are implemented. Hosted deployment is not complete: the dashboard source must be in a private repository that Render can access, the migrations must be applied to the chosen Supabase project, and provider configuration must be confirmed. Do not describe the app as live or production-ready.
+**Status:** The application and agent are implemented, and the source has been pushed to a private GitHub repository. The selected Supabase project is authenticated and matched to the app, but contains an older empty `appointments` table. The migration now preserves that table and uses `receptionist_appointments`; schema changes and the Render dashboard deployment are still pending. Do not describe the app as live or production-ready.
 
 ## Architecture and requested behavior
 
@@ -40,7 +40,7 @@ The clinic agent receives only its provider keys, clinic UUID, dashboard origin 
 - `src/server/integrations/render.ts`: server-only Render API calls for clinic service creation, environment-variable updates, status, redeploy and removal.
 - `src/server/integrations/supabase.ts`: clinic, call, appointment and usage persistence.
 - `agent/`: Python/FastAPI Pipecat service, Gemini Live tools, optional Cartesia TTS, Cal.com API v2 adapter, and signed dashboard bridge client.
-- `supabase/migrations/`: initial clinic/auth/data schema and additive Render-service metadata schema.
+- `supabase/migrations/`: initial clinic/auth/data schema (with a separate `receptionist_appointments` table so the legacy table remains untouched) and additive Render-service metadata schema.
 - `docs/`: provider/source research and operating limits.
 
 ## Visual design

@@ -23,6 +23,7 @@
     "lucide-react": "^0.468.0",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
+    "tsx": "^4.23.15",
     "ws": "^8.22.0",
     "zod": "^4.6.7"
   },
@@ -34,7 +35,6 @@
     "@types/ws": "^8.18.2",
     "@vitejs/plugin-react": "^5.2.0",
     "concurrently": "^9.2.5",
-    "tsx": "^4.23.15",
     "typescript": "^5.9.3",
     "vite": "^7.3.7"
   }

@@ -124,23 +124,23 @@ export async function addMessage(tenantId: string, callId: string, role: string,
 }
 
 export async function recordAppointment(input: { tenantId: string; bookingUid: string; status: string; start: string; end?: string; type: string; name: string; email?: string; phone?: string; callId?: string }): Promise<void> {
-  const result = await getSupabase().from('appointments').upsert({ tenant_id: input.tenantId, cal_booking_uid: input.bookingUid, status: input.status, starts_at: input.start, ends_at: input.end ?? null, appointment_type: input.type, attendee_name: input.name, attendee_email: input.email ?? null, attendee_phone: input.phone ?? null, last_call_id: input.callId ?? null, updated_at: new Date().toISOString() }, { onConflict: 'tenant_id,cal_booking_uid' });
+  const result = await getSupabase().from('receptionist_appointments').upsert({ tenant_id: input.tenantId, cal_booking_uid: input.bookingUid, status: input.status, starts_at: input.start, ends_at: input.end ?? null, appointment_type: input.type, attendee_name: input.name, attendee_email: input.email ?? null, attendee_phone: input.phone ?? null, last_call_id: input.callId ?? null, updated_at: new Date().toISOString() }, { onConflict: 'tenant_id,cal_booking_uid' });
   if (result.error) throw new Error(`Could not store booking record: ${result.error.message}`);
 }
 
 export async function updateAppointmentStatus(tenantId: string, bookingUid: string, status: string): Promise<void> {
-  const result = await getSupabase().from('appointments').update({ status, updated_at: new Date().toISOString() }).eq('tenant_id', tenantId).eq('cal_booking_uid', bookingUid);
+  const result = await getSupabase().from('receptionist_appointments').update({ status, updated_at: new Date().toISOString() }).eq('tenant_id', tenantId).eq('cal_booking_uid', bookingUid);
   if (result.error) throw new Error(`Could not update booking record: ${result.error.message}`);
 }
 
 export async function recordReschedule(tenantId: string, oldUid: string, newUid: string | undefined, start: string, callId?: string): Promise<void> {
   const db = getSupabase();
-  const previous = await db.from('appointments').select('*').eq('tenant_id', tenantId).eq('cal_booking_uid', oldUid).maybeSingle();
+  const previous = await db.from('receptionist_appointments').select('*').eq('tenant_id', tenantId).eq('cal_booking_uid', oldUid).maybeSingle();
   if (previous.error) throw new Error(`Could not load prior booking: ${previous.error.message}`);
-  const updated = await db.from('appointments').update({ status: 'rescheduled', updated_at: new Date().toISOString() }).eq('tenant_id', tenantId).eq('cal_booking_uid', oldUid);
+  const updated = await db.from('receptionist_appointments').update({ status: 'rescheduled', updated_at: new Date().toISOString() }).eq('tenant_id', tenantId).eq('cal_booking_uid', oldUid);
   if (updated.error) throw new Error(`Could not update prior booking: ${updated.error.message}`);
   if (newUid && previous.data) {
-    const result = await db.from('appointments').upsert({
+    const result = await db.from('receptionist_appointments').upsert({
       tenant_id: tenantId, cal_booking_uid: newUid, status: 'accepted', starts_at: start,
       ends_at: null, appointment_type: previous.data.appointment_type, attendee_name: previous.data.attendee_name,
       attendee_email: previous.data.attendee_email, attendee_phone: previous.data.attendee_phone, last_call_id: callId ?? null,
@@ -158,7 +158,7 @@ export async function getUsageSummary(tenantId: string, since = new Date(Date.no
   const periodStart = since.toISOString();
   const [callCount, appointmentCount, rows] = await Promise.all([
     db.from('call_logs').select('id', { count: 'exact', head: true }).eq('tenant_id', tenantId).gte('started_at', periodStart),
-    db.from('appointments').select('id', { count: 'exact', head: true }).eq('tenant_id', tenantId).gte('created_at', periodStart),
+    db.from('receptionist_appointments').select('id', { count: 'exact', head: true }).eq('tenant_id', tenantId).gte('created_at', periodStart),
     db.from('call_logs').select('started_at,ended_at,transfer_requested').eq('tenant_id', tenantId).gte('started_at', periodStart).order('started_at', { ascending: false }).limit(2000),
   ]);
   if (callCount.error || appointmentCount.error || rows.error) throw new Error('Could not load usage summary.');

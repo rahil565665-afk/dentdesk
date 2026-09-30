@@ -1,7 +1,8 @@
 -- Initial schema for the multi-tenant AI receptionist.
--- Apply manually to the intended Supabase project after review. The dashboard server's
--- elevated key bypasses RLS, so every API route must enforce its passcode-session role
--- and tenant scope before reading or changing a clinic's data.
+-- The existing public.appointments table belongs to an older CRM schema. Leave it intact;
+-- this application uses public.receptionist_appointments to avoid changing legacy data.
+-- The dashboard server's elevated key bypasses RLS, so every API route must enforce its
+-- passcode-session role and tenant scope before reading or changing a clinic's data.
 
 create extension if not exists pgcrypto;
 
@@ -40,7 +41,7 @@ create table if not exists public.tenant_memberships (
   primary key (tenant_id, user_id)
 );
 
-create table if not exists public.appointments (
+create table if not exists public.receptionist_appointments (
   id uuid primary key default gen_random_uuid(),
   tenant_id uuid not null references public.companies(id) on delete cascade,
   cal_booking_uid text not null,
@@ -56,7 +57,7 @@ create table if not exists public.appointments (
   updated_at timestamptz not null default now(),
   unique (tenant_id, cal_booking_uid)
 );
-create index if not exists appointments_tenant_start_idx on public.appointments (tenant_id, starts_at desc);
+create index if not exists receptionist_appointments_tenant_start_idx on public.receptionist_appointments (tenant_id, starts_at desc);
 
 create table if not exists public.call_logs (
   id uuid primary key default gen_random_uuid(),
@@ -87,17 +88,17 @@ create index if not exists conversation_messages_call_idx on public.conversation
 alter table public.app_users enable row level security;
 alter table public.companies enable row level security;
 alter table public.tenant_memberships enable row level security;
-alter table public.appointments enable row level security;
+alter table public.receptionist_appointments enable row level security;
 alter table public.call_logs enable row level security;
 alter table public.conversation_messages enable row level security;
 
 -- No browser role accesses these tables directly. The server uses a Supabase
--- secret key only after checking Manus identity, application role, and tenant membership.
+-- secret key only after checking application role and tenant scope.
 revoke all on table public.app_users, public.companies, public.tenant_memberships,
-  public.appointments, public.call_logs,
+  public.receptionist_appointments, public.call_logs,
   public.conversation_messages from anon, authenticated;
 grant all on table public.app_users, public.companies, public.tenant_memberships,
-  public.appointments, public.call_logs,
+  public.receptionist_appointments, public.call_logs,
   public.conversation_messages to service_role;
 
 grant usage on schema public to service_role;

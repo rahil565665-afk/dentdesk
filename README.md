@@ -42,7 +42,7 @@ The Render API key can create services and set their environment variables. Keep
 The source must first be pushed to a **private** GitHub repository and connected to Render. Do not make the repository public. Create a Node Web Service from the repository root with the `main` branch (or the selected branch), Free plan for this demo, and these commands:
 
 ```text
-Build: corepack enable && pnpm install --frozen-lockfile && pnpm build
+Build: corepack enable && pnpm install --frozen-lockfile --prod=false && pnpm build && pnpm prune --prod
 Start: pnpm start
 ```
 
@@ -86,6 +86,8 @@ Review and apply these files in order to the intended Supabase project:
 
 1. `supabase/migrations/202610260001_initial_schema.sql`
 2. `supabase/migrations/202610270002_render_agents.sql`
+
+The configured Supabase project already contains an older, empty `public.appointments` table linked to a `clients` table. These migrations leave both legacy tables untouched; the receptionist application writes bookings to the separate `public.receptionist_appointments` table.
 
 They are not automatically applied by the application. Back up and inspect the target project before running schema changes if it already contains data. The dashboard uses the Supabase secret key server-side and checks tenant ownership. Clinic agents do not receive the Supabase key; each uses a short-lived signed dashboard bridge to fetch only its assigned clinic's configuration and write call/appointment lifecycle metadata.
 
