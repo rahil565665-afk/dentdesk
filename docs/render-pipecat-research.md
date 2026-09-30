@@ -33,3 +33,9 @@ Clinic context supports a greeting, text knowledge field and structured FAQs. Th
 The Twilio panel accepts account SID, auth token and E.164 number fields. Values can be saved to Render service configuration only; `TWILIO_ENABLED` stays false, and the application does not call Twilio, create webhooks, provision numbers or route calls.
 
 Pipecat is open-source and does not require Pipecat Cloud. Gemini, Cartesia and Cal.com use their own provider accounts, credentials and quotas. Render Free is not an always-on production service. No healthcare-compliance certification is provided.
+
+## External keep-alive probes (reviewed 2026-10-28)
+
+Render says a Free web service spins down after 15 minutes without inbound traffic; HTTP requests and WebSocket messages count. An external monitor polling the dashboard's `/api/health` or an agent's `/health` before that timeout would therefore be expected to delay spin-down while requests keep arriving. Render documents external probes as a way to monitor uptime and diagnose incidents, not as a guarantee that a Free service will remain continuously available. Pings cannot prevent deploys, maintenance, network interruptions, or account usage limits. Sources: [Free services](https://render.com/docs/free), [Uptime best practices](https://render.com/docs/uptime-best-practices), [WebSockets](https://render.com/docs/websocket).
+
+The Free allowance is 750 instance-hours per workspace per calendar month. A 10-minute keep-alive would keep each service running for nearly all of the month rather than allowing it to sleep. The dashboard plus one clinic agent kept awake for a 30-day month would use 1,440 instance-hours, exceeding the shared 750-hour allowance. This is not a sustainable way to keep the requested multi-service system always warm on Free. No external pinger has been configured; user-initiated wake remains in place until the user explicitly changes that requirement.
