@@ -31,9 +31,9 @@
 
 ## 5. Remaining live handoff
 
-- [ ] In Render Account Settings, add GitHub under **Git Deployment Credentials** and authorize access to the private `rahil565665-afk/dentdesk` repository. This one-time Git-provider authorization is separate from the Render API key.
-- [ ] Deploy the dashboard Node service with its protected production environment and confirm the private repository is reachable from Render.
+- [x] Connect Render to GitHub and authorize access to the private `rahil565665-afk/dentdesk` repository. This one-time Git-provider authorization is separate from the Render API key.
+- [ ] Add billing information in the Render account if required, then deploy the dashboard Node service on the selected Free plan with its protected production environment. Render returned HTTP 402 before creating any service; review Render's billing terms before confirming any payment method.
 - [ ] Deploy the management dashboard and create a clinic agent from its GUI. Verify actual Render build/runtime state rather than relying on local checks.
-- [ ] Apply the Supabase migrations and configure provider credentials in the GUI. Verify Gemini Live, optional Cartesia and Cal.com against the actual providers.
+- [ ] Configure provider credentials in the GUI. Verify Gemini Live, optional Cartesia and Cal.com against the actual providers.
 - [ ] Complete an end-to-end browser conversation and appointment-flow check after deployment. Do not claim the system is live until the services are healthy and a real audio conversation succeeds.
 - [x] Document Render Free cold starts, no background keepalive, audio/data boundaries and the absence of healthcare-compliance or production-readiness claims. Do not test with real patient data.

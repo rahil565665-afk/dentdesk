@@ -1,6 +1,6 @@
 # Implementation Plan — DentDesk Dental Receptionist Console
 
-**Status:** The application and agent are implemented, the source is in a private GitHub repository, and both Supabase migrations are applied. Render's API key and workspace work, but Render is not authorized to fetch the private GitHub repository. No dashboard or clinic-agent service has been created yet. Do not describe the app as live or production-ready.
+**Status:** The application and agent are implemented, the source is in a private GitHub repository, and both Supabase migrations are applied. The user completed the Render-to-GitHub connection. Render's latest create attempt requires billing information (HTTP 402), so no dashboard or clinic-agent service has been created. Do not describe the app as live or production-ready.
 
 ## Architecture and requested behavior
 
