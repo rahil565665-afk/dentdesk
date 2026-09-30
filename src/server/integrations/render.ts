@@ -44,14 +44,15 @@ function repoDetails(): { repo: string; branch: string; region: string } {
   if (!repo) throw new HttpError(503, 'Connect a private Git repository before deploying clinic agents.');
   let url: URL;
   try { url = new URL(repo); } catch { throw new HttpError(503, 'The configured Render repository URL is invalid.'); }
-  if (url.protocol !== 'https:' || url.hostname !== 'github.com' || url.username || url.password || url.search || url.hash || !/^\/[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+(?:\.git)?$/.test(url.pathname)) {
+  const repoPath = url.pathname.replace(/\.git$/, '');
+  if (url.protocol !== 'https:' || url.hostname !== 'github.com' || url.username || url.password || url.search || url.hash || !/^\/[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(repoPath)) {
     throw new HttpError(503, 'Set RENDER_REPO_URL to a private GitHub repository URL without embedded credentials.');
   }
   const branch = process.env.RENDER_BRANCH?.trim() || 'main';
   if (!/^[A-Za-z0-9._/-]{1,120}$/.test(branch) || branch.includes('..')) throw new HttpError(503, 'The configured Render branch name is invalid.');
   const region = process.env.RENDER_REGION?.trim() || 'singapore';
   if (!['frankfurt', 'oregon', 'ohio', 'singapore', 'virginia'].includes(region)) throw new HttpError(503, 'The configured Render region is invalid.');
-  return { repo, branch, region };
+  return { repo: `${url.origin}${repoPath}`, branch, region };
 }
 
 async function renderRequest<T>(pathname: string, init: RequestInit = {}): Promise<T> {

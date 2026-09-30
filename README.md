@@ -39,7 +39,7 @@ The Render API key can create services and set their environment variables. Keep
 
 ## Deploy the dashboard to Render
 
-The source must first be pushed to a **private** GitHub repository and connected to Render. Do not make the repository public. Create a Node Web Service from the repository root with the `main` branch (or the selected branch), Free plan for this demo, and these commands:
+The source for this project is in a **private** GitHub repository. Render must be authorized to read it; do not make the repository public. Set `RENDER_REPO_URL` to `https://github.com/owner/repository` without a trailing `.git` suffix and set the branch separately. Create a Node Web Service from the repository root with the Free plan for this demo and these commands:
 
 ```text
 Build: corepack enable && pnpm install --frozen-lockfile --prod=false && pnpm build && pnpm prune --prod
