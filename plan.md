@@ -1,6 +1,6 @@
 # Implementation Plan — DentDesk Dental Receptionist Console
 
-**Status:** The application and agent are implemented, and the source has been pushed to a private GitHub repository. The selected Supabase project is authenticated and matched to the app, but contains an older empty `appointments` table. The migration now preserves that table and uses `receptionist_appointments`; schema changes and the Render dashboard deployment are still pending. Do not describe the app as live or production-ready.
+**Status:** The application and agent are implemented, the source is in a private GitHub repository, and both Supabase migrations are applied. Render's API key and workspace work, but Render is not authorized to fetch the private GitHub repository. No dashboard or clinic-agent service has been created yet. Do not describe the app as live or production-ready.
 
 ## Architecture and requested behavior
 
@@ -62,4 +62,4 @@ Three less-common directions considered: clinical editorial (**0.04**), dark ind
 
 ## Delivery boundary
 
-The project has local source and synthetic-check evidence, but a local build is not a hosted deployment. The next live-deployment step is connecting a private Git repository to the Render account and setting the hosted dashboard environment variables. Then apply both SQL migrations, configure provider credentials, create an agent through the dashboard, and make a real browser voice test. Render service creation and paid services must not be implied unless a returned Render status confirms them. Do not use real patient data or claim healthcare compliance or production readiness without independent review.
+The project has local source and passing build/import checks, and its Supabase schema is live. The remaining external step is authorizing Render's GitHub connection to read the private repository. Then create the dashboard service, create a demo clinic through the dashboard, confirm provider responses, and perform a real browser voice test. Do not use real patient data or claim healthcare compliance or production readiness without independent review.

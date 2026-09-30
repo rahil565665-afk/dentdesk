@@ -13,7 +13,7 @@
 - [x] Let the administrator configure the clinic greeting, time zone, free-text reference/knowledge base, structured FAQs, speech-output mode, Cal.com selector and provider credentials through the GUI. The current implementation supports text and FAQs; it does not upload documents, parse files, create embeddings or perform vector retrieval.
 - [x] Provide SQL migrations for clinic records, Render service metadata, integration-status metadata, call logs, receptionist appointments and tenant-aware database access. Keep the existing legacy `public.appointments` table untouched. The dashboard holds the central Supabase secret key server-side; agent services receive no Supabase secret key.
 - [x] Let each Pipecat agent fetch only its own clinic's settings and write call/appointment lifecycle metadata through a short-lived tenant-signed dashboard bridge. Agents do not persist raw audio, live transcript text, caller identity or full conversation history. The browser shows a live transcript only in session memory; appointment records may contain attendee name/email.
-- [ ] Apply both migrations to the Supabase project matched to the app configuration. Preserve its existing empty legacy `public.appointments` table and write receptionist bookings to `public.receptionist_appointments`.
+- [x] Apply both migrations to the Supabase project matched to the app configuration. Preserve its existing empty legacy `public.appointments` table and write receptionist bookings to `public.receptionist_appointments`.
 
 ## 3. Real-time open-source Pipecat browser voice tester
 
@@ -31,7 +31,8 @@
 
 ## 5. Remaining live handoff
 
-- [ ] Configure the dashboard's protected production environment and confirm the project is reachable from the selected private Render-connected repository.
+- [ ] In Render Account Settings, add GitHub under **Git Deployment Credentials** and authorize access to the private `rahil565665-afk/dentdesk` repository. This one-time Git-provider authorization is separate from the Render API key.
+- [ ] Deploy the dashboard Node service with its protected production environment and confirm the private repository is reachable from Render.
 - [ ] Deploy the management dashboard and create a clinic agent from its GUI. Verify actual Render build/runtime state rather than relying on local checks.
 - [ ] Apply the Supabase migrations and configure provider credentials in the GUI. Verify Gemini Live, optional Cartesia and Cal.com against the actual providers.
 - [ ] Complete an end-to-end browser conversation and appointment-flow check after deployment. Do not claim the system is live until the services are healthy and a real audio conversation succeeds.

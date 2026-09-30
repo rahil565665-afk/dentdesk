@@ -41,6 +41,8 @@ The Render API key can create services and set their environment variables. Keep
 
 The source for this project is in a **private** GitHub repository. Render must be authorized to read it; do not make the repository public. Set `RENDER_REPO_URL` to `https://github.com/owner/repository` without a trailing `.git` suffix and set the branch separately. Create a Node Web Service from the repository root with the Free plan for this demo and these commands:
 
+This is a one-time account connection: sign in to Render, open [Account Security](https://dashboard.render.com/u/settings#account-security), choose **Add credential** under **Git Deployment Credentials**, and connect GitHub. When asked which repositories Render can access, select only `rahil565665-afk/dentdesk` if that option is available. A Render API key can manage Render resources, but it does not grant Render permission to clone a private GitHub repository.
+
 ```text
 Build: corepack enable && pnpm install --frozen-lockfile --prod=false && pnpm build && pnpm prune --prod
 Start: pnpm start
